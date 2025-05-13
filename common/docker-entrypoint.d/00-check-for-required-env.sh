@@ -28,11 +28,14 @@ required=("S3_BUCKET_NAME" "S3_SERVER" "S3_SERVER_PORT" "S3_SERVER_PROTO"
 
 # Require some form of authentication to be configured.
 
-# a) Using container credentials. This is indicated by AWS_CONTAINER_CREDENTIALS_RELATIVE_URI being set.
+# a) Using container credentials. This is indicated by AWS_CONTAINER_CREDENTIALS_RELATIVE_URI or AWS_CONTAINER_CREDENTIALS_FULL_URI being set.
 #    See https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html
 #    Example: We are running inside an ECS task.
 if [[ -v AWS_CONTAINER_CREDENTIALS_RELATIVE_URI ]]; then
   echo "Running inside an ECS task, using container credentials"
+
+elif [[ -v AWS_CONTAINER_CREDENTIALS_FULL_URI ]]; then
+  echo "Running inside an EKS pod, using container credentials"
 
 elif [[ -v S3_SESSION_TOKEN ]]; then
   echo "Deprecated the S3_SESSION_TOKEN! Use the environment variable of AWS_SESSION_TOKEN instead"
